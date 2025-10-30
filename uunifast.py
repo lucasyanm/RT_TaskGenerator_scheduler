@@ -3,6 +3,7 @@
 # UUnifast for making different task sets
 
 import random
+import numpy as np
 from task import task, generateTaskFromUtilization, writeTaskSetToFile
 
 
@@ -23,12 +24,9 @@ def uunifast(n, U):
     return AllSum, vectU
 
 
-def uunifasts(N, n, U):
-    # if there is a file at the moment, overwrite on it 
-    file = open("Task_List.txt", "w")
-
+def uunifasts(N, n, U, file):
     # will be used for configuration propose
-    configuration_data = str(N) + " " + str(n)
+    configuration_data = str(N) + " " + str(n) + " " + str(U)
     file.write(configuration_data)
     file.write("\n")
     counter = 1
@@ -43,11 +41,18 @@ def uunifasts(N, n, U):
             #counters seperates outputs of each runs
             writeTaskSetToFile(counter, taskSet, file)
             counter += 1
-    file.close()
 
 # run 1000 time , make 100 job in each list and with 1 utilization
 # set proper values here 
-RUN = 10   # how many times we run unifast algorithm
-JOB_NUMBERS = 6 #task number in each list 
-UTILIZATION = 1 #Utilization
-uunifasts(RUN, JOB_NUMBERS, UTILIZATION)
+RUN = 50   # how many times we run unifast algorithm
+JOB_NUMBERS = 10 #task number in each list
+# UTILIZATION = 0.85 #Utilization
+
+# if there is a file at the moment, overwrite on it 
+file = open("Task_List.txt", "w")
+for value in np.arange(0.65, 1.01, 0.05):
+    print(f"Generating Task Sets with Utilization = {round(value, 2)}")
+    uunifasts(RUN, JOB_NUMBERS, round(value, 2), file)
+file.close()
+
+# uunifasts(RUN, JOB_NUMBERS, UTILIZATION)
