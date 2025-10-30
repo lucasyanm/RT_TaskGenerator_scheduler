@@ -15,8 +15,8 @@ def writeTaskSetToFile(TaskSetID, taskSetList, file):
     file.write("Task Set : " + str(TaskSetID))
     file.write("\n")
     for i in range(len(taskSetList)):
-        file.write(str(taskSetList[i].Period()) + " " +
-                   str(taskSetList[i].Utilization()) + "\n")
+        file.write( str(taskSetList[i].getExecutionTime()) + " " +
+                    str(taskSetList[i].Period()) + "\n")
 
 
 class task(object):
