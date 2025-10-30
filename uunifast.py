@@ -49,7 +49,7 @@ JOB_NUMBERS = 10 #task number in each list
 # UTILIZATION = 0.85 #Utilization
 
 # if there is a file at the moment, overwrite on it 
-file = open("Task_List.txt", "w")
+file = open("task_list.txt", "w")
 for value in np.arange(0.65, 1.01, 0.05):
     print(f"Generating Task Sets with Utilization = {round(value, 2)}")
     uunifasts(RUN, JOB_NUMBERS, round(value, 2), file)

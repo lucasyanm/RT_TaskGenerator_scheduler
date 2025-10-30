@@ -110,7 +110,7 @@ def fullyExecuted(TaskSet):
 
 
 TaskSetsHolder, TASKS_SET_NUMBERS, TASKS_NUMBER_IN_A_SET = readTaskLists(
-    "Task_List.txt")
+    "task_list.txt")
 
 # Store all scheduler results
 GlobalTaskSetsSchedulingArray = []

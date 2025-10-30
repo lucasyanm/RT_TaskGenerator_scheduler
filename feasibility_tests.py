@@ -122,7 +122,7 @@ def load_tasks_from_file(filename):
 # Main program
 # --------------------------------
 if __name__ == "__main__":
-    filename = "Task_List.txt"
+    filename = "task_list.txt"
     scenarios = load_tasks_from_file(filename)
 
     rm_feasible_percentage_per_scenario = []
