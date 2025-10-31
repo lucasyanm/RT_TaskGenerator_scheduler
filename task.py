@@ -1,12 +1,19 @@
 import random
 
 
-def generateTaskFromUtilization(UtilizationSet):
+def generateTaskFromUtilization(UtilizationSet, ImplicitDeadline):
     taskList = []
     for i in range(len(UtilizationSet)):
         p = random.randint(2, 10)
         e = p * UtilizationSet[i]
-        taskList.append(task(p, e))
+
+        if ImplicitDeadline:
+            d = p
+        else:
+            alpha = random.uniform(0.1, 0.9)
+            d = (1 - alpha) * p + alpha * e
+            
+        taskList.append(task(p, e, d))
     return taskList
 
 
@@ -16,13 +23,15 @@ def writeTaskSetToFile(TaskSetID, taskSetList, file):
     file.write("\n")
     for i in range(len(taskSetList)):
         file.write( str(taskSetList[i].getExecutionTime()) + " " +
-                    str(taskSetList[i].Period()) + "\n")
+                    str(taskSetList[i].Period()) + " " +
+                    str(taskSetList[i].RelativeDeadline()) + "\n")
 
 
 class task(object):
-    def __init__(self, p, e):
+    def __init__(self, p, e, d):
         self.period = p
         self.executionTime = e
+        self.deadline = d
         self.seen = False
         self.ID = -1
         self.executedTime = 0
@@ -41,7 +50,7 @@ class task(object):
         return (self.executionTime)/(self.period)
 
     def RelativeDeadline(self):
-        return self.period
+        return self.deadline
 
     def getSeenFlag(self):
         return self.seen

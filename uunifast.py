@@ -24,7 +24,7 @@ def uunifast(n, U):
     return AllSum, vectU
 
 
-def uunifasts(N, n, U, file):
+def uunifasts(N, n, ID, U, file):
     # will be used for configuration propose
     configuration_data = str(N) + " " + str(n) + " " + str(U)
     file.write(configuration_data)
@@ -36,7 +36,7 @@ def uunifasts(N, n, U, file):
         # for example, 0.9999 is unacceptable when utilization(U) is equal to 1
         if(Sum == U):
             # call function that makes the
-            taskSet = generateTaskFromUtilization(Vect)
+            taskSet = generateTaskFromUtilization(Vect, ID)
 
             #counters seperates outputs of each runs
             writeTaskSetToFile(counter, taskSet, file)
@@ -44,15 +44,16 @@ def uunifasts(N, n, U, file):
 
 # run 1000 time , make 100 job in each list and with 1 utilization
 # set proper values here 
-RUN = 50   # how many times we run unifast algorithm
-JOB_NUMBERS = 10 #task number in each list
+RUN = 10000 # how many times we run unifast algorithm
+JOB_NUMBERS = 100 #task number in each list
 # UTILIZATION = 0.85 #Utilization
+IMPLICIT_DEADLINE = False
 
 # if there is a file at the moment, overwrite on it 
 file = open("task_list.txt", "w")
 for value in np.arange(0.65, 1.01, 0.05):
     print(f"Generating Task Sets with Utilization = {round(value, 2)}")
-    uunifasts(RUN, JOB_NUMBERS, round(value, 2), file)
+    uunifasts(RUN, JOB_NUMBERS, IMPLICIT_DEADLINE, round(value, 2), file)
 file.close()
 
 # uunifasts(RUN, JOB_NUMBERS, UTILIZATION)
