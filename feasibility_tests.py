@@ -54,17 +54,32 @@ def test_dm(tasks):
     return True
 
 
-# ---------------------------
-# Earliest Deadline First (EDF)
-# ---------------------------
-def test_edf(num_utilization):
-    """
-    Liu & Layland's (1973) necessary and sufficient test for EDF.
-    """
-    # TODO: Add toggle for detailed output
-    # Detailed output
-    # print(f"[EDF] Total utilization = {num_utilization:.4f}")
-    return num_utilization <= 1.0
+def dbf(task, t):
+    """demand bound function from a task for instants t"""
+    C, T, D = task["C"], task["T"], task["D"]
+    n_jobs = max(0, math.floor((t - D)/T) + 1)
+    return n_jobs * C
+
+def test_edf(tasks, num_utilization):
+    if tasks[0]["D"] == tasks[0]["T"]:
+        return num_utilization <= 1.0
+    
+    # possible deadlines for critical instant
+    deadlines = set()
+    for task in tasks:
+        k_max = math.ceil(max(t["T"] for t in tasks) / task["T"])
+        for k in range(k_max+1):
+            deadlines.add(k * task["T"] + task["D"])
+    deadlines = sorted(deadlines)
+
+    for t in deadlines:
+        load = sum(dbf(task, t) for task in tasks)
+        if load > t:
+            # TODO: Add toggle for detailed output
+            # Detailed output
+            # print(f"❌ Failed: load={load:.2f} > instant={t}")
+            return False
+    return True
 
 
 def load_tasks_from_file(filename):
@@ -108,8 +123,8 @@ def load_tasks_from_file(filename):
             for _ in range(tasks_per_set):
                 if i >= len(lines):
                     raise ValueError("End of file. Success.")
-                c, t = map(float, lines[i].split())
-                tasks.append({"C": c, "T": t, "D": t})  # implicit deadline
+                c, t, d = map(float, lines[i].split())
+                tasks.append({"C": c, "T": t, "D": d}) # Execution time, Period, Deadline
                 i += 1
 
             scenario["task_sets"].append(tasks)
@@ -139,9 +154,9 @@ if __name__ == "__main__":
         edf_feasible_count = 0
 
         for ts_idx, tasks in enumerate(scenario["task_sets"], 1):
-            rm_feasible = test_rm(tasks, scenario['utilization'])
+            rm_feasible = test_rm(tasks, scenario['utilization']) if tasks[0]["D"] == tasks[0]["T"] else False
             dm_feasible = test_dm(tasks)
-            edf_feasible = test_edf(scenario['utilization'])
+            edf_feasible = test_edf(tasks, scenario['utilization'])
 
             if rm_feasible:
                 rm_feasible_count += 1
