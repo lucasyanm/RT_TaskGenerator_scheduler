@@ -10,7 +10,8 @@ def generateTaskFromUtilization(UtilizationSet, ImplicitDeadline):
         if ImplicitDeadline:
             d = p
         else:
-            alpha = random.uniform(0.1, 0.9)
+            # alpha = random.uniform(0.1, 0.9)
+            alpha = 0.60
             d = (1 - alpha) * p + alpha * e
             
         taskList.append(task(p, e, d))
