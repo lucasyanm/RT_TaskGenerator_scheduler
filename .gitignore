@@ -1,5 +1,5 @@
 __pycache__
 SchedulerList.txt
 task_list.txt
-output.txt
+*output*.* 
 *fig/*.png
